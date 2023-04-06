@@ -1,11 +1,15 @@
 #include <SFML/Graphics.hpp>
 #include <time.h>
+#include <random>
 
 using namespace sf;
 
 int main()
 {
 	srand(time(NULL));
+
+	std::default_random_engine rd(time(NULL));
+	std::uniform_int_distribution<int> dis;
 
 	RenderWindow app(VideoMode(400, 400), "Minesweeper");
 
@@ -24,7 +28,14 @@ int main()
 		{
 			sgrid[i][j] = 10;
 
+			/*
 			if (rand() %5 == 0)
+			{
+				grid[i][j] = 9;
+			}
+			*/
+
+			if (dis(rd) % 5 == 0)
 			{
 				grid[i][j] = 9;
 			}
