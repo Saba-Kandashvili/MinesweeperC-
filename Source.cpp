@@ -1,8 +1,35 @@
 #include <SFML/Graphics.hpp>
 #include <time.h>
 #include <random>
+#include <iostream>
+
 
 using namespace sf;
+
+
+//when an empty tile is click this sets all the ones in the grid to be shown
+void showEmptyTiles(int i , int j,int g[12][12],int gs[12][12], bool checkedCords[12][12]){
+	
+	//check Cases
+	if(i < 1 || i > 11 || j < 1 || j > 11) return; // out of bounds 
+	if(checkedCords[i][j]) return; // already checked
+	checkedCords[i][j] = true;
+	if(g[i][j] == 9) return; // is a mine 
+
+	//recurse only if 0 otherwise just show the tile and return
+	//recursing through each neighbour and showing them
+	if(g[i][j] == 0){
+		for(int k = -1; k <= 1 ; k ++){
+			for(int w = -1; w <= 1 ; w++){
+				if(k == 0 && w == 0) continue;
+				showEmptyTiles(i+k,j+w,g,gs,checkedCords);
+			};
+		};
+	};
+	gs[i][j] = g[i][j];
+	return;
+};
+
 
 int main()
 {
@@ -84,6 +111,11 @@ int main()
 			{
 				if (e.key.code == Mouse::Left)
 				{
+					if(grid[x][y] == 0){
+						bool checkedCords[12][12] = {{false}};
+						showEmptyTiles(x,y,grid,sgrid,checkedCords);
+						break;
+					};
 					sgrid[x][y] = grid[x][y];
 				}
 				else if (e.key.code == Mouse::Right)
